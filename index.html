@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق تذكير المكالمات</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            padding: 30px;
+        }
+
+        h1 {
+            color: #cc0000;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        input[type="time"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ff4444;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #cc0000;
+            box-shadow: 0 0 10px rgba(255,68,68,0.3);
+        }
+
+        .phone-group {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .phone-input {
+            flex: 1;
+        }
+
+        .copy-btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: #cc0000;
+            transform: translateY(-2px);
+        }
+
+        .ivr-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .ivr-btn {
+            flex: 1;
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .ivr-btn:hover {
+            background: #cc0000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,68,68,0.4);
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: #cc0000;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #990000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(204,0,0,0.4);
+        }
+
+        .client-list {
+            margin-top: 30px;
+            border-top: 2px solid #ff4444;
+            padding-top: 20px;
+        }
+
+        .client-item {
+            background: #fff5f5;
+            border: 2px solid #ff4444;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .client-info {
+            margin-bottom: 10px;
+        }
+
+        .client-info strong {
+            color: #cc0000;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #ff4444;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .alert-badge {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+
+        .alert-badge.active {
+            background: #ff9800;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .ivr-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📞 تطبيق تذكير المكالمات</h1>
+        
+        <form id="clientForm">
+            <div class="form-group">
+                <label for="clientName">اسم العميل (ND):</label>
+                <input type="text" id="clientName" required placeholder="أدخل اسم العميل">
+            </div>
+
+            <div class="form-group">
+                <label for="clientPhone">رقم الهاتف:</label>
+                <div class="phone-group">
+                    <div class="phone-input">
+                        <input type="tel" id="clientPhone" required placeholder="0612345678">
+                    </div>
+                    <button type="button" class="copy-btn" onclick="copyPhone()">📋 نسخ</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="callTime">وقت الاتصال:</label>
+                <input type="time" id="callTime" required>
+                <p class="help-text">أدخل وقت الاتصال المطلوب</p>
+            </div>
+
+            <div class="form-group">
+                <label for="reminderTime">وقت التذكير (اختياري):</label>
+                <input type="time" id="reminderTime">
+                <p class="help-text">إذا تركته فارغاً، سيتم التذكير بعد ساعتين من وقت الاتصال</p>
+            </div>
+
+            <button type="submit" class="submit-btn">➕ إضافة عميل</button>
+        </form>
+
+        <div class="client-list" id="clientList">
+            <h2 style="color: #cc0000; margin-bottom: 15px;">قائمة العملاء</h2>
+        </div>
+    </div>
+
+    <audio id="alarmSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIGmi77eifTRAMUKrm8Ltl" type="audio/wav">
+    </audio>
+
+    <script>
+        let clients = [];
+        let activeAlarms = {};
+
+        function loadClients() {
+            const stored = localStorage.getItem('clients');
+            if (stored) {
+                clients = JSON.parse(stored);
+                renderClients();
+                clients.forEach(client => {
+                    scheduleAlarm(client);
+                });
+            }
+        }
+
+        function saveClients() {
+            localStorage.setItem('clients', JSON.stringify(clients));
+        }
+
+        function renderClients() {
+            const list = document.getElementById('clientList');
+            if (clients.length === 0) {
+                list.innerHTML = '<h2 style="color: #cc0000; margin-bottom: 15px;">قائمة العملاء</h2><p style="text-align: center; color: #999;">لا توجد مواعيد حالياً</p>';
+                return;
+            }
+
+            let html = '<h2 style="color: #cc0000; margin-bottom: 15px;">قائمة العملاء</h2>';
+            clients.forEach((client, index) => {
+                const alarmStatus = activeAlarms[client.id] ? 'active' : '';
+                html += `
+                    <div class="client-item">
+                        <button class="delete-btn" onclick="deleteClient(${index})">×</button>
+                        <div class="client-info">
+                            <span class="alert-badge ${alarmStatus}">⏰ ${alarmStatus ? 'نشط' : 'منتظر'}</span>
+                            <strong>العميل:</strong> ${client.name}
+                        </div>
+                        <div class="client-info">
+                            <strong>الهاتف:</strong> ${client.phone}
+                            <button class="copy-btn" style="margin-right: 10px; padding: 5px 10px; font-size: 12px;" onclick="copyPhoneNumber('${client.phone}')">📋</button>
+                        </div>
+                        <div class="client-info">
+                            <strong>وقت الاتصال:</strong> ${client.callTime}
+                        </div>
+                        <div class="client-info">
+                            <strong>وقت التذكير:</strong> ${client.reminderTime}
+                        </div>
+                        <div class="ivr-buttons">
+                            <button class="ivr-btn" onclick="callIVR('${client.phone}', '555')">
+                                📞 IVR Maroc #555
+                            </button>
+                            <button class="ivr-btn" onclick="callIVR('${client.phone}', '655')">
+                                📞 IVR Inwi #655
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            list.innerHTML = html;
+        }
+
+        function copyPhone() {
+            const phone = document.getElementById('clientPhone').value;
+            if (phone) {
+                copyPhoneNumber(phone);
+            }
+        }
+
+        function copyPhoneNumber(phone) {
+            navigator.clipboard.writeText(phone).then(() => {
+                alert('تم نسخ الرقم: ' + phone);
+            });
+        }
+
+        function callIVR(phone, code) {
+            const telLink = `tel:${phone}`;
+            window.location.href = telLink;
+            
+            setTimeout(() => {
+                window.location.href = `tel:${code}%23`;
+            }, 2000);
+        }
+
+        function scheduleAlarm(client) {
+            const now = new Date();
+            const [callHour, callMinute] = client.callTime.split(':');
+            const callDate = new Date(now);
+            callDate.setHours(parseInt(callHour), parseInt(callMinute), 0, 0);
+
+            if (callDate <= now) {
+                callDate.setDate(callDate.getDate() + 1);
+            }
+
+            let reminderDate;
+            if (client.reminderTime && client.reminderTime !== '') {
+                const [remHour, remMinute] = client.reminderTime.split(':');
+                reminderDate = new Date(now);
+                reminderDate.setHours(parseInt(remHour), parseInt(remMinute), 0, 0);
+                
+                if (reminderDate <= now) {
+                    reminderDate.setDate(reminderDate.getDate() + 1);
+                }
+            } else {
+                reminderDate = new Date(callDate.getTime() - (2 * 60 * 60 * 1000));
+            }
+
+            const timeUntilReminder = reminderDate - now;
+            
+            if (timeUntilReminder > 0) {
+                const timeoutId = setTimeout(() => {
+                    playAlarm(client);
+                }, timeUntilReminder);
+                
+                activeAlarms[client.id] = timeoutId;
+            }
+        }
+
+        function playAlarm(client) {
+            const audio = document.getElementById('alarmSound');
+            audio.play();
+            
+            let count = 0;
+            const interval = setInterval(() => {
+                audio.play();
+                count++;
+                if (count >= 5) {
+                    clearInterval(interval);
+                }
+            }, 2000);
+
+            if (Notification.permission === "granted") {
+                new Notification("⏰ تذكير بالموعد", {
+                    body: `حان وقت الاتصال بالعميل: ${client.name}\nالهاتف: ${client.phone}`,
+                    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75'>📞</text></svg>"
+                });
+            }
+
+            alert(`⏰ تذكير!\n\nحان وقت الاتصال بالعميل:\n${client.name}\nالهاتف: ${client.phone}\nالوقت: ${client.callTime}`);
+            
+            renderClients();
+        }
+
+        function deleteClient(index) {
+            if (confirm('هل أنت متأكد من حذف هذا العميل؟')) {
+                const client = clients[index];
+                if (activeAlarms[client.id]) {
+                    clearTimeout(activeAlarms[client.id]);
+                    delete activeAlarms[client.id];
+                }
+                clients.splice(index, 1);
+                saveClients();
+                renderClients();
+            }
+        }
+
+        document.getElementById('clientForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const client = {
+                id: Date.now(),
+                name: document.getElementById('clientName').value,
+                phone: document.getElementById('clientPhone').value,
+                callTime: document.getElementById('callTime').value,
+                reminderTime: document.getElementById('reminderTime').value || ''
+            };
+
+            clients.push(client);
+            saveClients();
+            scheduleAlarm(client);
+            renderClients();
+
+            this.reset();
+            alert('✅ تم إضافة العميل بنجاح!');
+        });
+
+        if (Notification.permission === "default") {
+            Notification.requestPermission();
+        }
+
+        loadClients();
+    </script>
+</body>
+</html>
