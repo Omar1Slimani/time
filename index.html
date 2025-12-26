@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تطبيق تذكير المكالمات</title>
+    <title>Application de Rappel d'Appels</title>
     <style>
         * {
             margin: 0;
@@ -16,7 +16,6 @@
             background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
             min-height: 100vh;
             padding: 20px;
-            direction: rtl;
         }
 
         .container {
@@ -95,10 +94,12 @@
             display: flex;
             gap: 10px;
             margin-top: 20px;
+            flex-wrap: wrap;
         }
 
         .ivr-btn {
             flex: 1;
+            min-width: 170px;
             background: #ff4444;
             color: white;
             border: none;
@@ -118,6 +119,30 @@
             background: #cc0000;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(255,68,68,0.4);
+        }
+
+        .ivr-btn.maroc {
+            background: #00549E;
+        }
+
+        .ivr-btn.maroc:hover {
+            background: #003366;
+        }
+
+        .ivr-btn.inwi {
+            background: #00AEEF;
+        }
+
+        .ivr-btn.inwi:hover {
+            background: #0088CC;
+        }
+
+        .ivr-btn.orange {
+            background: #FF6600;
+        }
+
+        .ivr-btn.orange:hover {
+            background: #CC5500;
         }
 
         .submit-btn {
@@ -166,7 +191,7 @@
         .delete-btn {
             position: absolute;
             top: 10px;
-            left: 10px;
+            right: 10px;
             background: #ff4444;
             color: white;
             border: none;
@@ -204,6 +229,20 @@
             margin-top: 5px;
         }
 
+        .ivr-options {
+            margin-top: 20px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            padding: 15px;
+            background: #f9f9f9;
+        }
+
+        .ivr-options h3 {
+            color: #cc0000;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 20px;
@@ -216,46 +255,77 @@
             .ivr-buttons {
                 flex-direction: column;
             }
+
+            .ivr-btn {
+                min-width: 100%;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>📞 تطبيق تذكير المكالمات</h1>
+        <h1>📞 Application de Rappel d'Appels</h1>
         
+        <div class="ivr-options">
+            <h3>🔢 Numéros IVR</h3>
+            <div class="ivr-buttons">
+                <button class="ivr-btn maroc" onclick="callIVR('0644225588', 'Maroc Telecom')">
+                    <span>📞</span>
+                    <div style="text-align: left;">
+                        <div style="font-size: 14px;">Maroc Telecom</div>
+                        <div style="font-size: 12px;">0644225588</div>
+                    </div>
+                </button>
+                <button class="ivr-btn inwi" onclick="callIVR('0799452243', 'Inwi')">
+                    <span>📞</span>
+                    <div style="text-align: left;">
+                        <div style="font-size: 14px;">Inwi</div>
+                        <div style="font-size: 12px;">0799452243</div>
+                    </div>
+                </button>
+                <button class="ivr-btn orange" onclick="callIVR('0523432211', 'Orange')">
+                    <span>📞</span>
+                    <div style="text-align: left;">
+                        <div style="font-size: 14px;">Orange</div>
+                        <div style="font-size: 12px;">0523432211</div>
+                    </div>
+                </button>
+            </div>
+        </div>
+
         <form id="clientForm">
             <div class="form-group">
-                <label for="clientName">اسم العميل (ND):</label>
-                <input type="text" id="clientName" required placeholder="أدخل اسم العميل">
+                <label for="clientName">Nom du Client (ND) :</label>
+                <input type="text" id="clientName" required placeholder="Entrez le nom du client">
             </div>
 
             <div class="form-group">
-                <label for="clientPhone">رقم الهاتف:</label>
+                <label for="clientPhone">Numéro de Téléphone :</label>
                 <div class="phone-group">
                     <div class="phone-input">
                         <input type="tel" id="clientPhone" required placeholder="0612345678">
                     </div>
-                    <button type="button" class="copy-btn" onclick="copyPhone()">📋 نسخ</button>
+                    <button type="button" class="copy-btn" onclick="copyPhone()">📋 Copier</button>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="callTime">وقت الاتصال:</label>
+                <label for="callTime">Heure d'Appel :</label>
                 <input type="time" id="callTime" required>
-                <p class="help-text">أدخل وقت الاتصال المطلوب</p>
+                <p class="help-text">Entrez l'heure d'appel souhaitée</p>
             </div>
 
             <div class="form-group">
-                <label for="reminderTime">وقت التذكير (اختياري):</label>
+                <label for="reminderTime">Heure de Rappel (optionnel) :</label>
                 <input type="time" id="reminderTime">
-                <p class="help-text">إذا تركته فارغاً، سيتم التذكير بعد ساعتين من وقت الاتصال</p>
+                <p class="help-text">Si laissé vide, le rappel sera 2 heures avant l'appel</p>
             </div>
 
-            <button type="submit" class="submit-btn">➕ إضافة عميل</button>
+            <button type="submit" class="submit-btn">➕ Ajouter Client</button>
         </form>
 
         <div class="client-list" id="clientList">
-            <h2 style="color: #cc0000; margin-bottom: 15px;">قائمة العملاء</h2>
+            <h2 style="color: #cc0000; margin-bottom: 15px;">Liste des Clients</h2>
         </div>
     </div>
 
@@ -264,6 +334,13 @@
     </audio>
 
     <script>
+        // Définition des numéros IVR fixes
+        const IVR_NUMBERS = {
+            'Maroc Telecom': '0644225588',
+            'Inwi': '0799452243',
+            'Orange': '0523432211'
+        };
+
         let clients = [];
         let activeAlarms = {};
 
@@ -285,36 +362,51 @@
         function renderClients() {
             const list = document.getElementById('clientList');
             if (clients.length === 0) {
-                list.innerHTML = '<h2 style="color: #cc0000; margin-bottom: 15px;">قائمة العملاء</h2><p style="text-align: center; color: #999;">لا توجد مواعيد حالياً</p>';
+                list.innerHTML = '<h2 style="color: #cc0000; margin-bottom: 15px;">Liste des Clients</h2><p style="text-align: center; color: #999;">Aucun rendez-vous pour le moment</p>';
                 return;
             }
 
-            let html = '<h2 style="color: #cc0000; margin-bottom: 15px;">قائمة العملاء</h2>';
+            let html = '<h2 style="color: #cc0000; margin-bottom: 15px;">Liste des Clients</h2>';
             clients.forEach((client, index) => {
                 const alarmStatus = activeAlarms[client.id] ? 'active' : '';
                 html += `
                     <div class="client-item">
                         <button class="delete-btn" onclick="deleteClient(${index})">×</button>
                         <div class="client-info">
-                            <span class="alert-badge ${alarmStatus}">⏰ ${alarmStatus ? 'نشط' : 'منتظر'}</span>
-                            <strong>العميل:</strong> ${client.name}
+                            <span class="alert-badge ${alarmStatus}">⏰ ${alarmStatus ? 'Actif' : 'En attente'}</span>
+                            <strong>Client :</strong> ${client.name}
                         </div>
                         <div class="client-info">
-                            <strong>الهاتف:</strong> ${client.phone}
-                            <button class="copy-btn" style="margin-right: 10px; padding: 5px 10px; font-size: 12px;" onclick="copyPhoneNumber('${client.phone}')">📋</button>
+                            <strong>Téléphone :</strong> ${client.phone}
+                            <button class="copy-btn" style="margin-left: 10px; padding: 5px 10px; font-size: 12px;" onclick="copyPhoneNumber('${client.phone}')">📋</button>
                         </div>
                         <div class="client-info">
-                            <strong>وقت الاتصال:</strong> ${client.callTime}
+                            <strong>Heure d'appel :</strong> ${client.callTime}
                         </div>
                         <div class="client-info">
-                            <strong>وقت التذكير:</strong> ${client.reminderTime}
+                            <strong>Heure de rappel :</strong> ${client.reminderTime || '2 heures avant l\'appel'}
                         </div>
                         <div class="ivr-buttons">
-                            <button class="ivr-btn" onclick="callIVR('${client.phone}', '555')">
-                                📞 IVR Maroc #555
+                            <button class="ivr-btn maroc" onclick="callIVR('${client.phone}', 'Maroc Telecom')">
+                                <span>📞</span>
+                                <div style="text-align: left;">
+                                    <div style="font-size: 14px;">Maroc Telecom</div>
+                                    <div style="font-size: 12px;">0644225588</div>
+                                </div>
                             </button>
-                            <button class="ivr-btn" onclick="callIVR('${client.phone}', '655')">
-                                📞 IVR Inwi #655
+                            <button class="ivr-btn inwi" onclick="callIVR('${client.phone}', 'Inwi')">
+                                <span>📞</span>
+                                <div style="text-align: left;">
+                                    <div style="font-size: 14px;">Inwi</div>
+                                    <div style="font-size: 12px;">0799452243</div>
+                                </div>
+                            </button>
+                            <button class="ivr-btn orange" onclick="callIVR('${client.phone}', 'Orange')">
+                                <span>📞</span>
+                                <div style="text-align: left;">
+                                    <div style="font-size: 14px;">Orange</div>
+                                    <div style="font-size: 12px;">0523432211</div>
+                                </div>
                             </button>
                         </div>
                     </div>
@@ -332,17 +424,79 @@
 
         function copyPhoneNumber(phone) {
             navigator.clipboard.writeText(phone).then(() => {
-                alert('تم نسخ الرقم: ' + phone);
+                showNotification('Numéro copié : ' + phone);
             });
         }
 
-        function callIVR(phone, code) {
-            const telLink = `tel:${phone}`;
-            window.location.href = telLink;
+        function callIVR(clientPhone, provider) {
+            // Copier d'abord le numéro du client
+            navigator.clipboard.writeText(clientPhone).then(() => {
+                showNotification('Numéro client copié : ' + clientPhone);
+                
+                // Après 1 seconde, ouvrir l'application téléphone
+                setTimeout(() => {
+                    // Ouvrir l'application téléphone avec le numéro du client
+                    window.location.href = `tel:${clientPhone}`;
+                    
+                    // Copier le numéro IVR après 3 secondes
+                    setTimeout(() => {
+                        const ivrNumber = IVR_NUMBERS[provider];
+                        if (ivrNumber) {
+                            navigator.clipboard.writeText(ivrNumber).then(() => {
+                                showNotification(`Numéro IVR ${provider} copié : ${ivrNumber}`);
+                            });
+                        }
+                    }, 3000);
+                }, 1000);
+            });
+        }
+
+        function showNotification(message) {
+            // Créer l'élément de notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #4CAF50;
+                color: white;
+                padding: 15px 30px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                z-index: 1000;
+                animation: slideIn 0.3s ease-out;
+                font-family: inherit;
+                font-size: 14px;
+                text-align: center;
+                max-width: 90%;
+                word-wrap: break-word;
+            `;
             
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+                    to { transform: translateX(-50%) translateY(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(-50%) translateY(0); opacity: 1; }
+                    to { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            // Supprimer la notification après 3 secondes
             setTimeout(() => {
-                window.location.href = `tel:${code}%23`;
-            }, 2000);
+                notification.style.animation = 'slideOut 0.3s ease-in';
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
         }
 
         function scheduleAlarm(client) {
@@ -393,19 +547,19 @@
             }, 2000);
 
             if (Notification.permission === "granted") {
-                new Notification("⏰ تذكير بالموعد", {
-                    body: `حان وقت الاتصال بالعميل: ${client.name}\nالهاتف: ${client.phone}`,
+                new Notification("⏰ Rappel d'Appel", {
+                    body: `Il est temps d'appeler le client : ${client.name}\nTéléphone : ${client.phone}`,
                     icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75'>📞</text></svg>"
                 });
             }
 
-            alert(`⏰ تذكير!\n\nحان وقت الاتصال بالعميل:\n${client.name}\nالهاتف: ${client.phone}\nالوقت: ${client.callTime}`);
+            showNotification(`⏰ Rappel !\nIl est temps d'appeler le client :\n${client.name}\nTéléphone : ${client.phone}`);
             
             renderClients();
         }
 
         function deleteClient(index) {
-            if (confirm('هل أنت متأكد من حذف هذا العميل؟')) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce client ?')) {
                 const client = clients[index];
                 if (activeAlarms[client.id]) {
                     clearTimeout(activeAlarms[client.id]);
@@ -434,13 +588,15 @@
             renderClients();
 
             this.reset();
-            alert('✅ تم إضافة العميل بنجاح!');
+            showNotification('✅ Client ajouté avec succès !');
         });
 
+        // Demander la permission pour les notifications
         if (Notification.permission === "default") {
             Notification.requestPermission();
         }
 
+        // Charger les clients au démarrage
         loadClients();
     </script>
 </body>
