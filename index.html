@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Application de Rappel d'Appels</title>
+    <title>IVR TIME</title>
+    <link rel="shortcut icon" href="iam.png" type="image/x-icon">
     <style>
+        
         * {
             margin: 0;
             padding: 0;
@@ -130,11 +132,11 @@
         }
 
         .ivr-btn.inwi {
-            background: #00AEEF;
+            background: #cc00ef;
         }
 
         .ivr-btn.inwi:hover {
-            background: #0088CC;
+            background: #cc00ef;
         }
 
         .ivr-btn.orange {
@@ -260,34 +262,36 @@
                 min-width: 100%;
             }
         }
+
     </style>
+    
 </head>
 <body>
     <div class="container">
-        <h1>📞 Application de Rappel d'Appels</h1>
+        <h1>RDV</h1>
         
         <div class="ivr-options">
-            <h3>🔢 Numéros IVR</h3>
+            <h3>Numéros IVR</h3>
             <div class="ivr-buttons">
-                <button class="ivr-btn maroc" onclick="callIVR('0644225588', 'Maroc Telecom')">
+                <button class="ivr-btn maroc" onclick="callIVR('0665501785', 'Maroc Telecom')">
                     <span>📞</span>
                     <div style="text-align: left;">
                         <div style="font-size: 14px;">Maroc Telecom</div>
-                        <div style="font-size: 12px;">0644225588</div>
+                        <div style="font-size: 12px;">0665501785</div>
                     </div>
                 </button>
-                <button class="ivr-btn inwi" onclick="callIVR('0799452243', 'Inwi')">
+                <button class="ivr-btn inwi" onclick="callIVR('0529060690', 'Inwi')">
                     <span>📞</span>
                     <div style="text-align: left;">
                         <div style="font-size: 14px;">Inwi</div>
-                        <div style="font-size: 12px;">0799452243</div>
+                        <div style="font-size: 12px;">0529060690</div>
                     </div>
                 </button>
-                <button class="ivr-btn orange" onclick="callIVR('0523432211', 'Orange')">
+                <button class="ivr-btn orange" onclick="callIVR('0665501785', 'Orange')">
                     <span>📞</span>
                     <div style="text-align: left;">
                         <div style="font-size: 14px;">Orange</div>
-                        <div style="font-size: 12px;">0523432211</div>
+                        <div style="font-size: 12px;">0665501785</div>
                     </div>
                 </button>
             </div>
@@ -334,11 +338,12 @@
     </audio>
 
     <script>
+        
         // Définition des numéros IVR fixes
         const IVR_NUMBERS = {
-            'Maroc Telecom': '0644225588',
-            'Inwi': '0799452243',
-            'Orange': '0523432211'
+            'Maroc Telecom': '0665501785',
+            'Inwi': '0529060690',
+            'Orange': '0665501785'
         };
 
         let clients = [];
@@ -388,24 +393,10 @@
                         </div>
                         <div class="ivr-buttons">
                             <button class="ivr-btn maroc" onclick="callIVR('${client.phone}', 'Maroc Telecom')">
-                                <span>📞</span>
+                                <span></span>
                                 <div style="text-align: left;">
-                                    <div style="font-size: 14px;">Maroc Telecom</div>
-                                    <div style="font-size: 12px;">0644225588</div>
-                                </div>
-                            </button>
-                            <button class="ivr-btn inwi" onclick="callIVR('${client.phone}', 'Inwi')">
-                                <span>📞</span>
-                                <div style="text-align: left;">
-                                    <div style="font-size: 14px;">Inwi</div>
-                                    <div style="font-size: 12px;">0799452243</div>
-                                </div>
-                            </button>
-                            <button class="ivr-btn orange" onclick="callIVR('${client.phone}', 'Orange')">
-                                <span>📞</span>
-                                <div style="text-align: left;">
-                                    <div style="font-size: 14px;">Orange</div>
-                                    <div style="font-size: 12px;">0523432211</div>
+                                    <div style="font-size: 14px;">Numéros Client</div>
+                                    <div style="font-size: 12px;"></div>
                                 </div>
                             </button>
                         </div>
@@ -599,5 +590,6 @@
         // Charger les clients au démarrage
         loadClients();
     </script>
+
 </body>
 </html>
